@@ -5,6 +5,8 @@ import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
 import VegetableAdd from './components/VegetableAdd';
 import SeasoningAdd from './components/SeasoningAdd';
+import './App.css';
+
 
 function App() {
   const { isAuthenticated } = useAuth0();

@@ -4,7 +4,7 @@ const PORT = 3000;
 const mongoose = require('mongoose');
 const cors = require('cors'); // Add this line
 app.use(express.json())
-
+const vegetableRoutes = require('./routes/vegetableRoutes');
 const vegetableSchema =require("./models/VegetableAdd");
 app.use(cors({
     origin: 'http://localhost:3000',
@@ -23,11 +23,11 @@ db.once('open', () => {
 });
 
 
-
 app.get('/', (req, res) => {
     res.send('Hello, World!');
 });
 
+app.use('/api', vegetableRoutes);
 
 
 

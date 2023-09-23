@@ -2,21 +2,22 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 
 export default function SeasoningAdd() {
-    const [seasonings, setSeasonings] = useState([]);
+    const [seasoning, setSeasoning] = useState([]);
     const [quantities, setQuantities] = useState({});
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchSeasonings = async () => {
+        // Fetch all vegetables on component mount
+        const fetchSeasoning = async () => {
             try {
                 const response = await axios.get('http://localhost:3000/api/seasoning');
-                setSeasonings(response.data);
+                setSeasoning(response.data);
             } catch (err) {
-                setError("Failed to fetch seasonings");
+                setError("Failed to fetch seasoning");
             }
         };
 
-        fetchSeasonings();
+        fetchSeasoning();
     }, []);
 
     const handleQuantityChange = (id, value) => {
@@ -28,16 +29,17 @@ export default function SeasoningAdd() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+    
         const numericQuantities = Object.fromEntries(
             Object.entries(quantities)
                 .map(([key, value]) => {
-                    const seasoningName = seasonings.find(season => season._id === key)?.name;
+                    // Get the vegetable name using its ID
+                    const seasoningName = seasoning.find(veg => veg._id === key)?.name;
                     return [seasoningName, parseInt(value, 10)];
                 })
                 .filter(([name, value]) => name && !isNaN(value) && value !== undefined)
         );
-        
+    
         try {
             const response = await axios.post('http://localhost:3000/api/seasoningQuantity', numericQuantities);
             console.log(response.data);
@@ -45,21 +47,24 @@ export default function SeasoningAdd() {
             console.error("Error updating quantities:", error);
         }
     };
+    
+    
+    
 
     return (
         <div style={styles.container}>
-            <h2>Seasonings</h2>
+            <h2>Seasoning</h2>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleSubmit}>
-                {seasonings.map(season => (
-                    <div key={season._id} style={styles.card}>
-                        <label>{season.name}</label>
-                        <div style={styles.seasonContainer}>
-                            <img src={season.imageUrl} alt={season.name} style={styles.image} />
+                {seasoning.map(sea => (
+                    <div key={sea._id} style={styles.card}>
+                        <label>{sea.name}</label>
+                        <div style={styles.vegContainer}>
+                            <img src={sea.imageUrl} alt={sea.name} style={styles.image} />
                             <input 
                                 type="number" 
-                                value={quantities[season._id] || ''}
-                                onChange={(e) => handleQuantityChange(season._id, e.target.value)}
+                                value={quantities[sea._id] || ''}
+                                onChange={(e) => handleQuantityChange(sea._id, e.target.value)}
                                 placeholder="Quantity"
                                 style={styles.input}
                             />
@@ -72,7 +77,6 @@ export default function SeasoningAdd() {
     );
 }
 
-//... (styles remain the same as in the VegetableAdd component)
 const styles = {
     container: {
         fontFamily: 'Arial, sans-serif',
@@ -98,7 +102,7 @@ const styles = {
         width: '50px',
         height: '50px',
         marginRight: '15px',
-        borderRadius: '50%'  // Makes the vegetable image circular
+        borderRadius: '50%'  // Makes the seasoning image circular
     },
     input: {
         padding: '5px',

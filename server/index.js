@@ -3,11 +3,16 @@ const app = express();
 const PORT = 3000;
 const mongoose = require('mongoose');
 const cors = require('cors'); // Add this line
-app.use(express.json())
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
+
+
 const vegetableRoutes = require('./routes/vegetableRoutes');
 const seasoningRoutes = require('./routes/seasoningRoutes');
+require("./models/VegetableAdd");
+require("./models/Seasoning");
 
-const vegetableSchema =require("./models/VegetableAdd");
 app.use(cors({
   origin: 'http://localhost:3001',
   credentials: true,

@@ -17,6 +17,9 @@ const seasoningSchema = new mongoose.Schema({
         type: Number,
         required: true,
         default: 0
+    }, imageUrl: {
+        type: String,
+        required: false
     }
 });
 

@@ -11,11 +11,16 @@ const vegetableSchema = new mongoose.Schema({
     },
     imageUrl: {
         type: String,
-        required: false // You can make it required if you always want an image associated
+        required: false
     },
     dateAdded: {
         type: Date,
         default: Date.now
+    },
+    quantity: {
+        type: Number,
+        required: true,
+        default: 0
     }
 });
 

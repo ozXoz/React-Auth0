@@ -7,9 +7,11 @@ app.use(express.json())
 const vegetableRoutes = require('./routes/vegetableRoutes');
 const vegetableSchema =require("./models/VegetableAdd");
 app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true, // Enable credentials (cookies, authorization headers, etc)
-  }));
+  origin: 'http://localhost:3001',
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 
   mongoose.connect("mongodb+srv://test99:Azr2010q+@cluster0.lgsng1z.mongodb.net/?retryWrites=true&w=majority",{
     useNewUrlParser: true,

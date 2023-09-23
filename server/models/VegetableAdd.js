@@ -6,7 +6,7 @@ const vegetableSchema = new mongoose.Schema({
         required: true,
         enum: [
             'Cucumber', 'Parsley', 'Red Cabbage', 'White Cabbage', 'Tomato',
-            'Lettuce', 'Onions', 'Turnip', 'Pickles', 'Banana Hot Peppers'
+            'Lettuce', 'Onions', 'Turnip', 'Pickles', 'Banana Hot Peppers','Garlic'
         ]
     },
     imageUrl: {

@@ -6,7 +6,7 @@ const seasoningSchema = new mongoose.Schema({
         required: true,
         enum: [
             'Mint', 'Garlic Powder', 'Onion Powder', 'Oregano', 'Black Pepper', 
-            'Salt', 'Curry', 'Chilli', 'Cayenne Peppers'
+            'Salt', 'Curry', 'Chilli', 'Cayenne Peppers','Paprika','Cumin'
         ]
     },
     dateAdded: {

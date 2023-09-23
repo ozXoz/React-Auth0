@@ -4,22 +4,61 @@ const router = express.Router();
 
 // Create a new vegetable
 // Create or Update a vegetable's quantity
-router.post('/addvegetables', async (req, res) => {
+
+// Create a new vegetable
+router.post('/vegetables', async (req, res) => {
     try {
-        for (let [id, quantity] of Object.entries(req.body)) {
-            let vegetable = await Vegetable.findById(id);
+        const { name, imageUrl } = req.body; // Assuming you will be sending the name and imageUrl in the body
+
+        // First check if the vegetable already exists
+        let vegetable = await Vegetable.findOne({ name: name });
+        if (vegetable) {
+            return res.status(400).send({ message: "Vegetable already exists" });
+        }
+
+        // If it doesn't exist, create a new vegetable entry
+        const newVegetable = new Vegetable({
+            name: name,
+            imageUrl: imageUrl,
+            quantity: 0 // Default quantity set to 0, you can change this if required
+        });
+
+        await newVegetable.save();
+        res.status(201).send(newVegetable);
+
+    } catch (error) {
+        console.error("Error while adding vegetable:", error);
+        res.status(400).send({ error: "Failed to add vegetable" });
+    }
+});
+
+
+router.post('/vegetablesQuantity', async (req, res) => {
+    try {
+        for (let [name, quantity] of Object.entries(req.body)) {
+            let vegetable = await Vegetable.findOne({ name: name });
             if (vegetable) {
-                vegetable.quantity += quantity;  // Update the quantity
+                // Update the quantity if the vegetable exists
+                vegetable.quantity += quantity;
                 await vegetable.save();
             } else {
-                // Handle the case where vegetable doesn't exist if needed
+                // Create a new vegetable entry if it doesn't exist
+                const newVegetable = new Vegetable({
+                    name: name,
+                    quantity: quantity
+                });
+                await newVegetable.save();
             }
         }
         res.status(201).send({ message: "Quantities updated successfully" });
     } catch (error) {
+        console.error("Actual error:", error); // <-- Added this line to log the actual error details
         res.status(400).send({ error: "Failed to update quantities" });
     }
 });
+
+
+
 
 
 

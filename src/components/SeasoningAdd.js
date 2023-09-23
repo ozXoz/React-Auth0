@@ -1,23 +1,117 @@
-
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
 
 export default function SeasoningAdd() {
-    const [seasoning, setSeasoning] = useState('');
+    const [seasonings, setSeasonings] = useState([]);
+    const [quantities, setQuantities] = useState({});
+    const [error, setError] = useState(null);
 
-    const handleSubmit = () => {
-        // Save vegetable to database or state
+    useEffect(() => {
+        const fetchSeasonings = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/seasoning');
+                setSeasonings(response.data);
+            } catch (err) {
+                setError("Failed to fetch seasonings");
+            }
+        };
+
+        fetchSeasonings();
+    }, []);
+
+    const handleQuantityChange = (id, value) => {
+        setQuantities({
+            ...quantities,
+            [id]: value
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        const numericQuantities = Object.fromEntries(
+            Object.entries(quantities)
+                .map(([key, value]) => {
+                    const seasoningName = seasonings.find(season => season._id === key)?.name;
+                    return [seasoningName, parseInt(value, 10)];
+                })
+                .filter(([name, value]) => name && !isNaN(value) && value !== undefined)
+        );
+        
+        try {
+            const response = await axios.post('http://localhost:3000/api/seasoningQuantity', numericQuantities);
+            console.log(response.data);
+        } catch (error) {
+            console.error("Error updating quantities:", error);
+        }
     };
 
     return (
-        <div>
-            <h2>Add SeasoningAdd</h2>
+        <div style={styles.container}>
+            <h2>Seasonings</h2>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleSubmit}>
-                <input 
-                    value={seasoning} 
-                    onChange={e => setSeasoning(e.target.value)} 
-                />
-                <button type="submit">Add</button>
+                {seasonings.map(season => (
+                    <div key={season._id} style={styles.card}>
+                        <label>{season.name}</label>
+                        <div style={styles.seasonContainer}>
+                            <img src={season.imageUrl} alt={season.name} style={styles.image} />
+                            <input 
+                                type="number" 
+                                value={quantities[season._id] || ''}
+                                onChange={(e) => handleQuantityChange(season._id, e.target.value)}
+                                placeholder="Quantity"
+                                style={styles.input}
+                            />
+                        </div>
+                    </div>
+                ))}
+                <button type="submit" style={styles.button}>Submit</button>
             </form>
         </div>
     );
 }
+
+//... (styles remain the same as in the VegetableAdd component)
+const styles = {
+    container: {
+        fontFamily: 'Arial, sans-serif',
+        padding: '20px',
+        maxWidth: '600px',
+        margin: '0 auto'
+    },
+    card: {
+        border: '1px solid #e0e0e0',
+        borderRadius: '5px',
+        padding: '15px',
+        marginBottom: '20px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+    vegContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        marginTop: '10px'
+    },
+    image: {
+        width: '50px',
+        height: '50px',
+        marginRight: '15px',
+        borderRadius: '50%'  // Makes the vegetable image circular
+    },
+    input: {
+        padding: '5px',
+        border: '1px solid #ccc',
+        borderRadius: '5px'
+    },
+    button: {
+        backgroundColor: '#4CAF50',
+        color: 'white',
+        padding: '10px 20px',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+        marginTop: '10px'
+    }
+};

@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const cors = require('cors'); // Add this line
 app.use(express.json())
 const vegetableRoutes = require('./routes/vegetableRoutes');
+const seasoningRoutes = require('./routes/seasoningRoutes');
+
 const vegetableSchema =require("./models/VegetableAdd");
 app.use(cors({
   origin: 'http://localhost:3001',
@@ -30,6 +32,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', vegetableRoutes);
+app.use('/api', seasoningRoutes);
+
 
 
 

@@ -44,7 +44,7 @@ function Home(){
 const styles = {
     container: {
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row-reverse',
         alignItems: 'center',
         fontFamily: "'Roboto', sans-serif",  // A popular modern font
         padding: '40px 20px',
@@ -52,14 +52,16 @@ const styles = {
         margin: '50px auto',
         backgroundColor: '#f8f9fa', // light gray background
         borderRadius: '8px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' // subtle shadow
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // subtle shadow
+        flexWrap: 'wrap',  // Added this
     },
     userImage: {
         width: '120px',
         height: '120px',
         borderRadius: '60%',
         objectFit: 'cover',
-        marginBottom: '25px'
+        marginBottom: '25px',
+        marginLeft: '25px'  // Added spacing between image and text
     },
     userInfo: {
         fontSize: '20px',
@@ -79,6 +81,7 @@ const styles = {
         transition: 'all 0.3s',
         boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)', // 3D shadow
         position: 'relative', // Necessary for the 3D effect on hover
+        maxWidth: '180px',
 
         // A pseudo-element for an additional 3D effect
         '&:before': {

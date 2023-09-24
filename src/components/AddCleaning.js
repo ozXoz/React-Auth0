@@ -4,25 +4,25 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-export default function SeasoningAdd() {
-    const [seasoning, setSeasoning] = useState([]);
+export default function AddCleaning() {
+    const [cleaning, setCleaning] = useState([]);
     const [quantities, setQuantities] = useState({});
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Fetch all vegetables on component mount
-        const fetchSeasoning = async () => {
+        // Fetch all cleaning on component mount
+        const fetchCleaning = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/seasoning');
-                setSeasoning(response.data);
+                const response = await axios.get('http://localhost:3000/api/cleaning');
+                setCleaning(response.data);
                 toast.success("Successfully ordered!"); // Display a success toast
             } catch (err) {
-                setError("Failed to fetch seasoning");
+                setError("Failed to fetch cleaning");
                 toast.error("Failed to order. Please try again."); // Display an error toast
             }
         };
 
-        fetchSeasoning();
+        fetchCleaning();
     }, []);
 
     const handleQuantityChange = (id, value) => {
@@ -38,15 +38,15 @@ export default function SeasoningAdd() {
         const numericQuantities = Object.fromEntries(
             Object.entries(quantities)
                 .map(([key, value]) => {
-                    // Get the vegetable name using its ID
-                    const seasoningName = seasoning.find(veg => veg._id === key)?.name;
-                    return [seasoningName, parseInt(value, 10)];
+                    // Get the cleaning name using its ID
+                    const cleaningName = cleaning.find(cen => cen._id === key)?.name;
+                    return [cleaningName, parseInt(value, 10)];
                 })
                 .filter(([name, value]) => name && !isNaN(value) && value !== undefined)
         );
     
         try {
-            const response = await axios.post('http://localhost:3000/api/seasoningQuantity', numericQuantities);
+            const response = await axios.post('http://localhost:3000/api/cleaningQuantity', numericQuantities);
             console.log(response.data);
         } catch (error) {
             console.error("Error updating quantities:", error);
@@ -58,18 +58,18 @@ export default function SeasoningAdd() {
 
     return (
         <div style={styles.container}>
-            <h2>Seasoning</h2>
+            <h2>Cleaning</h2>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleSubmit}>
-                {seasoning.map(sea => (
-                    <div key={sea._id} style={styles.card}>
-                        <label>{sea.name}</label>
+                {cleaning.map(cen => (
+                    <div key={cen._id} style={styles.card}>
+                        <label>{cen.name}</label>
                         <div style={styles.vegContainer}>
-                            <img src={sea.imageUrl} alt={sea.name} style={styles.image} />
+                            <img src={cen.imageUrl} alt={cen.name} style={styles.image} />
                             <input 
                                 type="number" 
-                                value={quantities[sea._id] || ''}
-                                onChange={(e) => handleQuantityChange(sea._id, e.target.value)}
+                                value={quantities[cen._id] || ''}
+                                onChange={(e) => handleQuantityChange(cen._id, e.target.value)}
                                 placeholder="Quantity"
                                 style={styles.input}
                             />

@@ -4,17 +4,17 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-export default function SeasoningAdd() {
-    const [seasoning, setSeasoning] = useState([]);
+export default function DrinkAdd() {
+    const [drink, setDrink] = useState([]);
     const [quantities, setQuantities] = useState({});
     const [error, setError] = useState(null);
 
     useEffect(() => {
         // Fetch all vegetables on component mount
-        const fetchSeasoning = async () => {
+        const fetchDrinking = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/seasoning');
-                setSeasoning(response.data);
+                const response = await axios.get('http://localhost:3000/api/drink');
+                setDrink(response.data);
                 toast.success("Successfully ordered!"); // Display a success toast
             } catch (err) {
                 setError("Failed to fetch seasoning");
@@ -22,7 +22,7 @@ export default function SeasoningAdd() {
             }
         };
 
-        fetchSeasoning();
+        fetchDrinking();
     }, []);
 
     const handleQuantityChange = (id, value) => {
@@ -39,14 +39,14 @@ export default function SeasoningAdd() {
             Object.entries(quantities)
                 .map(([key, value]) => {
                     // Get the vegetable name using its ID
-                    const seasoningName = seasoning.find(veg => veg._id === key)?.name;
-                    return [seasoningName, parseInt(value, 10)];
+                    const drinkName = drink.find(dir => dir._id === key)?.name;
+                    return [drinkName, parseInt(value, 10)];
                 })
                 .filter(([name, value]) => name && !isNaN(value) && value !== undefined)
         );
     
         try {
-            const response = await axios.post('http://localhost:3000/api/seasoningQuantity', numericQuantities);
+            const response = await axios.post('http://localhost:3000/api/drinkQuantity', numericQuantities);
             console.log(response.data);
         } catch (error) {
             console.error("Error updating quantities:", error);
@@ -58,18 +58,18 @@ export default function SeasoningAdd() {
 
     return (
         <div style={styles.container}>
-            <h2>Seasoning</h2>
+            <h2>Drink</h2>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleSubmit}>
-                {seasoning.map(sea => (
-                    <div key={sea._id} style={styles.card}>
-                        <label>{sea.name}</label>
+                {drink.map(dir => (
+                    <div key={dir._id} style={styles.card}>
+                        <label>{dir.name}</label>
                         <div style={styles.vegContainer}>
-                            <img src={sea.imageUrl} alt={sea.name} style={styles.image} />
+                            <img src={dir.imageUrl} alt={dir.name} style={styles.image} />
                             <input 
                                 type="number" 
-                                value={quantities[sea._id] || ''}
-                                onChange={(e) => handleQuantityChange(sea._id, e.target.value)}
+                                value={quantities[dir._id] || ''}
+                                onChange={(e) => handleQuantityChange(dir._id, e.target.value)}
                                 placeholder="Quantity"
                                 style={styles.input}
                             />

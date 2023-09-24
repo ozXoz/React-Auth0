@@ -68,8 +68,8 @@ export default function AddContainer() {
                             <img src={con.imageUrl} alt={con.name} style={styles.image} />
                             <input 
                                 type="number" 
-                                value={quantities[container._id] || ''}
-                                onChange={(e) => handleQuantityChange(container._id, e.target.value)}
+                                value={quantities[con._id] || ''}
+                                onChange={(e) => handleQuantityChange(con._id, e.target.value)}
                                 placeholder="Quantity"
                                 style={styles.input}
                             />

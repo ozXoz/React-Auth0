@@ -1,54 +1,55 @@
 const express = require('express');
-const Drink = require('../models/Drinks')
+const Drink = require('../models/Container');
+const Container = require('../models/Container');
 const router = express.Router();
 
-// Create a new Drink
-// Create or Update a vegetable's quantity
+// Create a new container
+// Create or Update a container's quantity
 
 // Create a new seasoning
-router.post('/drink', async (req, res) => {
+router.post('/container', async (req, res) => {
     try {
         const { name, imageUrl } = req.body; // Assuming you will be sending the name and imageUrl in the body
 
         // First check if the vegetable already exists
-        let drink = await Drink.findOne({ name: name });
-        if (drink) {
-            return res.status(400).send({ message: "Drink already exists" });
+        let container = await Container.findOne({ name: name });
+        if (container) {
+            return res.status(400).send({ message: "container already exists" });
         }
 
-        // If it doesn't exist, create a new seasoning entry
-        const newDrink = new Drink({
+        // If it doesn't exist, create a new container entry
+        const newContainer = new Container({
             name: name,
             imageUrl: imageUrl,
             quantity: 0 // Default quantity set to 0, you can change this if required
         });
 
-        await newDrink.save();
-        res.status(201).send(newDrink);
+        await newContainer.save();
+        res.status(201).send(newContainer);
 
     } catch (error) {
-        console.error("Error while adding seasoning:", error);
-        res.status(400).send({ error: "Failed to add Drink" });
+        console.error("Error while adding container:", error);
+        res.status(400).send({ error: "Failed to add container" });
     }
 });
 
 
-router.post('/drinkQuantity', async (req, res) => {
+router.post('/containerQuantity', async (req, res) => {
     console.log("Received body:", req.body);
     try {
         for (let [name, quantity] of Object.entries(req.body)) {
-            let drink = await Drink.findOne({ name: name });
-            if (drink) {
+            let container = await Container.findOne({ name: name });
+            if (container) {
                 // Update the quantity if the drink exists
-                drink.quantity += quantity;
-                await drink.save();
+                container.quantity += quantity;
+                await container.save();
             } else {
                 // Create a new drink entry if it doesn't exist
-                const newDrink = new Drink({
+                const newContainer = new Container({
                     name: name,
                     quantity: quantity
                 });
-                await newDrink.save();
+                await newContainer.save();
             }
         }
         res.status(201).send({ message: "Quantities updated successfully" });
@@ -64,30 +65,30 @@ router.post('/drinkQuantity', async (req, res) => {
 
 
 // Get all drink
-router.get('/drink', async (req, res) => {
+router.get('/container', async (req, res) => {
     try {
-        const drink = await Drink.find({});
-        res.send(drink);
+        const container = await Container.find({});
+        res.send(container);
     } catch (error) {
         res.status(500).send(error);
     }
 });
 
 // Get a single drink by ID
-router.get('/drink/:id', async (req, res) => {
+router.get('/container/:id', async (req, res) => {
     try {
-        const drink = await Drink.findById(req.params.id);
-        if (!drink) {
+        const container = await Container.findById(req.params.id);
+        if (!container) {
             return res.status(404).send();
         }
-        res.send(drink);
+        res.send(container);
     } catch (error) {
         res.status(500).send(error);
     }
 });
 
-// Update a drink
-router.patch('/drink/:id', async (req, res) => {
+// Update a container
+router.patch('/container/:id', async (req, res) => {
     const updates = Object.keys(req.body);
     const allowedUpdates = ['name', 'imageUrl', 'dateAdded', 'quantity'];
     const isValidOperation = updates.every(update => allowedUpdates.includes(update));
@@ -97,22 +98,22 @@ router.patch('/drink/:id', async (req, res) => {
     }
 
     try {
-        const drink = await Drink.findById(req.params.id);
-        if (!drink) {
+        const container = await Container.findById(req.params.id);
+        if (!container) {
             return res.status(404).send();
         }
 
         updates.forEach(update => {
             if(update === 'quantity') {
-                drink[update] += req.body[update]; // Increment the quantity
+                container[update] += req.body[update]; // Increment the quantity
             } else {
-                drink[update] = req.body[update];
+                container[update] = req.body[update];
             }
         });
         
-        await drink.save();
+        await container.save();
 
-        res.send(drink);
+        res.send(container);
     } catch (error) {
         res.status(400).send(error);
     }
@@ -120,14 +121,14 @@ router.patch('/drink/:id', async (req, res) => {
 
 
 
-// Delete a seasoning
-router.delete('/drink/:id', async (req, res) => {
+// container a seasoning
+router.delete('/container/:id', async (req, res) => {
     try {
-        const drink = await Drink.findByIdAndDelete(req.params.id);
-        if (!drink) {
+        const container = await Container.findByIdAndDelete(req.params.id);
+        if (!container) {
             return res.status(404).send();
         }
-        res.send(drink);
+        res.send(container);
     } catch (error) {
         res.status(500).send(error);
     }

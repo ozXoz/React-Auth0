@@ -11,9 +11,11 @@ app.use(bodyParser.json());
 const vegetableRoutes = require('./routes/vegetableRoutes');
 const seasoningRoutes = require('./routes/seasoningRoutes');
 const drinkRoutes = require('./routes/drinkRoutes');
+const containerRoutes = require('./routes/containerRoutes');
 require("./models/VegetableAdd");
 require("./models/Seasoning");
 require("./models/Drinks");
+require("./models/Container");
 
 app.use(cors({
   origin: 'http://localhost:3001',
@@ -41,6 +43,7 @@ app.get('/', (req, res) => {
 app.use('/api', vegetableRoutes);
 app.use('/api', seasoningRoutes);
 app.use('/api', drinkRoutes);
+app.use('/api', containerRoutes);
 
 
 
